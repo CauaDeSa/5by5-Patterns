@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Repository
 {
-    public class MongoRepositoryDao
+    public class MongoRepositoryDao : IRepository
     {
         #region Mongo Variables
         private readonly string _connection = "mongodb://root:Mongo%402024%23@localhost:27017/";
@@ -20,7 +20,7 @@ namespace Repository
 
         public static MongoRepositoryDao GetInstance() => _instance ?? new MongoRepositoryDao();
 
-        public List<Radar> GetMongoRadars()
+        public List<Radar> RetrieveAll()
         {
             var db = _client.GetDatabase("BDRadar");
             var collection = db.GetCollection<Radar>("Radar");

@@ -4,7 +4,7 @@ using Microsoft.Data.SqlClient;
 
 namespace Repository
 {
-    public class SqlRepositoryDao
+    public class SqlRepositoryDao : IRepository
     {
         #region SqlVariables
         private readonly string _connection = "Data Source=127.0.0.1; Initial Catalog=BDRadar; User Id=sa; Password=SqlServer2019!; TrustServerCertificate=Yes";
