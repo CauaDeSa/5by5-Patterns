@@ -7,4 +7,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Persist-JsonToSql\Model\Model.csproj" />
+    <ProjectReference Include="..\Controller\Controller.csproj" />
+  </ItemGroup>
+
 </Project>

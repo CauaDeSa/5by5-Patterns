@@ -9,6 +9,8 @@ namespace Model
         public static readonly string Insert = "spInsertRadar";
         public static readonly string RetrieveAll = "spRetrieveAll";
 
+        public int? Id { get; set; }
+
         [JsonProperty("concessionaria")]
         public string? Concessionaria { get; set; }
 
