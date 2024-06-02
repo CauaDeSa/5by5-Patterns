@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Model
 {
-    public class Radar
+    public class Radar : IRadar
     {
         public static readonly string Initialize = "spInitializeRadar";
         public static readonly string Insert = "spInsertRadar";
