@@ -8,13 +8,12 @@ namespace RepositoryDao
     public class SqlRepositoryDao
     {
         #region SqlVariables
-        private readonly string _connection = "Data Source=127.0.0.1; Initial Catalog=BDRadar; User Id=sa; Password=SqlServer2019!; TrustServerCertificate=Yes";
+        private readonly string _connection = "Data Source=127.0.0.1; Initial Catalog=BDRadar; User Id=sa; Password=SqlServer2019!; TrustServerCertificate=Yes; MultipleActiveResultSets=True ";
         private readonly SqlConnection _sqlConnection;
         private readonly SqlCommand _sqlCommand;
         #endregion
         
         private static SqlRepositoryDao? _instance;
-        private bool _isEmpty;
 
         private SqlRepositoryDao()
         {
@@ -31,8 +30,7 @@ namespace RepositoryDao
             _sqlConnection.Close();
 
             _sqlCommand.Parameters.Clear();
-            
-            _isEmpty = IsEmpty();
+
             _instance = this;
         }
 
@@ -40,15 +38,15 @@ namespace RepositoryDao
 
         public bool LoadData(List<Radar> lst)
         {
-            if (!_isEmpty)
+            if (!IsEmpty())
                 return false;
 
-            _sqlCommand.CommandText = Radar.Insert;
-            _sqlCommand.CommandType = System.Data.CommandType.StoredProcedure;
+            _sqlConnection.Open();
 
-            foreach (var radar in lst)
+            var tasks = lst.Select(async radar =>
             {
-                _sqlCommand.Parameters.AddRange(
+                var cmd = new SqlCommand() { CommandText = Radar.Insert, CommandType = System.Data.CommandType.StoredProcedure, Connection = _sqlConnection };
+                cmd.Parameters.AddRange(
 
                     new SqlParameter[]
                     {
@@ -68,16 +66,10 @@ namespace RepositoryDao
                         new SqlParameter("@velocidade_leve", radar.Velocidade_leve)
                     });
 
-                _sqlCommand.Connection = _sqlConnection;
+                await cmd.ExecuteNonQueryAsync();
+            });
 
-                _sqlConnection.Open();
-                _sqlCommand.ExecuteNonQuery();
-                _sqlConnection.Close();
-
-                _isEmpty = false;
-
-                _sqlCommand.Parameters.Clear();
-            }
+            Task.WhenAll(tasks).Wait();
 
             return true;
         }
@@ -87,7 +79,7 @@ namespace RepositoryDao
             List<Radar> lst = new();
 
             _sqlCommand.CommandText = Radar.RetrieveAll;
-            _sqlCommand.CommandType = System.Data.CommandType.StoredProcedure;
+            _sqlCommand.CommandType = CommandType.StoredProcedure;
 
             _sqlCommand.Connection = _sqlConnection;
             _sqlConnection.Open();
