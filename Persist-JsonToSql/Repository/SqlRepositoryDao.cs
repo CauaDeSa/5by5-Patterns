@@ -71,6 +71,8 @@ namespace RepositoryDao
 
             Task.WhenAll(tasks).Wait();
 
+            _sqlConnection.Close();
+
             return true;
         }
 
