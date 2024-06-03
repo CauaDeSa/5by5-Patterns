@@ -64,21 +64,26 @@ namespace View
                           "Option: ");
         }
 
-        public static string ReadString()
+        private static string ReadString()
         {
             string? str;
+            int cursorTop = Console.CursorTop;
+            int cursorLeft = Console.CursorLeft;
 
             do
             {
+                Console.SetCursorPosition(cursorLeft, cursorTop);
                 str = Console.ReadLine();
             } while (string.IsNullOrWhiteSpace(str));
 
             return str;
         }
 
-        public static int ReadCommand()
+        private static int ReadCommand()
         {
             int command;
+            int cursorTop = Console.CursorTop;
+            int cursorLeft = Console.CursorLeft;
 
             try
             {
@@ -86,10 +91,18 @@ namespace View
             }
             catch (Exception)
             {
+                ClearLine(cursorTop, cursorLeft);
                 return ReadCommand();
             }
 
             return command;
+        }
+
+        private static void ClearLine(int top, int left)
+        {
+            Console.SetCursorPosition(left, top);
+            Console.WriteLine("                                                 ");
+            Console.SetCursorPosition(left, top);
         }
     }
 }
